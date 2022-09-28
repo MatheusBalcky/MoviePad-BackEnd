@@ -5,7 +5,7 @@ import { Request, Response } from 'express';
 const app = express();
 app.use(express.json(), cors());
 
-app.get('/', (req: Request, res: Response) => {
+app.get('/testing', (req: Request, res: Response) => {
   res.status(200).send('Server test ok!');
 });
 

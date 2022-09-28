@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 
 interface error {
   code?: string;
@@ -13,7 +13,8 @@ const ERRORS: any = {
   bad_request: 400
 };
 
-export async function errorHandler(error: error, req: Request, res: Response) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function errorHandler(error: error, req: Request, res: Response, next: NextFunction) {
   let statusCode: number = ERRORS[error.type];
 
   if (!statusCode) {

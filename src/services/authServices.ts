@@ -20,5 +20,5 @@ export async function signIn(userData: interfaces.userData) {
 
   const token = jwt.createToken({ userId: user.id });
 
-  return token;
+  return { token, id: user.id, email: user.email, createdAt: user.createdAt };
 }

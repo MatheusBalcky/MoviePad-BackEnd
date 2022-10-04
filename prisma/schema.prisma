@@ -21,6 +21,7 @@ model users {
 
 model lists {
   id Int @id @default(autoincrement())
+  title String
 
   userId Int
   author users @relation(fields: [userId], references: [id])

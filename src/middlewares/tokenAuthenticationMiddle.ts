@@ -13,6 +13,7 @@ export async function tokenAuthenticationMiddle(req: Request, res: Response, nex
 
   const result = jwt.verifyToken(token);
   if (!result) throw error;
-
+  
+  res.locals.tokenData = result;
   next();
 }

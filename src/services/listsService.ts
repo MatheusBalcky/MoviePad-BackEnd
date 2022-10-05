@@ -6,5 +6,16 @@ export async function insertList(listData: Interfs.ListData) {
 }
 
 export async function getLists(userId: number) {
-  return await listsRepo.getLists(userId);
+  const promise = await listsRepo.getLists(userId);
+  const result = promise.map( item =>{
+    return {
+      id: item.id,
+      title: item.title,
+      iconList: item.iconList,
+      userId: item.userId,
+      createdAt: item.createdAt,
+      amount: item._count.listsMoviesTvshows
+    };
+  })
+  return result
 }

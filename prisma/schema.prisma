@@ -43,7 +43,7 @@ model listsMoviesTvshows {
 
 model moviesTvshows {
   id          Int      @id @default(autoincrement())
-  contentId   Int
+  contentId   Int      @unique
   title       String
   pictureUrl  String
   description String

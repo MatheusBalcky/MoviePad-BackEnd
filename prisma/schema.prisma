@@ -20,11 +20,11 @@ model users {
 }
 
 model lists {
-  id Int @id @default(autoincrement())
-  title String
+  id       Int     @id @default(autoincrement())
+  title    String
   iconList String?
-  userId Int
-  author users @relation(fields: [userId], references: [id])
+  userId   Int
+  author   users   @relation(fields: [userId], references: [id])
 
   createdAt DateTime @default(now())
 
@@ -42,12 +42,13 @@ model listsMoviesTvshows {
 }
 
 model moviesTvshows {
-  id          Int    @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
+  contentId   Int
   title       String
   pictureUrl  String
   description String
-  releaseYear Int
-  trailerUrl  String
+  releaseYear DateTime
+  trailerUrl  String?
   rating      Float
 
   listsMoviesTvshows listsMoviesTvshows[]

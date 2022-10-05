@@ -12,5 +12,12 @@ listsRoutes.post(
   validateSchemaMiddleware(listsSchemas.newList),
   listsController.createList
 );
+// listsRoutes.post('/lists/:listId/new-content', tokenAuthenticationMiddle,)
+
+listsRoutes.get(
+  '/lists',
+  tokenAuthenticationMiddle,
+  listsController.getListsFromUser
+);
 
 export default listsRoutes;

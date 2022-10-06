@@ -22,6 +22,6 @@ export async function getLists(userId: number) {
 
 export async function getOneListAndItsContents(listId: number, userId: number) {
   const promise = await listsRepo.getOneListAndItsContents(listId, userId);
-
+  if(promise.length === 0) throw { type: 'not_found', message: 'No list founded' };
   return promise
 }

@@ -23,8 +23,8 @@ export async function getLists(userId: number) {
 export async function getOneListAndItsContents(listId: number, userId: number) {
   if (isNaN(listId)) throw { type: 'bad_request', message: 'Invalid list id' };
 
-  const promise = await listsRepo.getOneListAndItsContents(listId, userId);
-  if (promise.length === 0) throw { type: 'not_found', message: 'No list founded' };
+  const list = await listsRepo.getOneListAndItsContents(listId, userId);
+  if (!list) throw { type: 'not_found', message: 'No list founded' };
 
-  return promise;
+  return list;
 }

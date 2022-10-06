@@ -15,7 +15,7 @@ export async function getLists(userId: number) {
 }
 
 export async function getOneListAndItsContents(listId: number, userId: number) {
-  return await prisma.lists.findMany({
+  const result =  await prisma.lists.findMany({
     where: { userId: userId, id: listId },
     include: {
       listsMoviesTvshows: {
@@ -23,4 +23,18 @@ export async function getOneListAndItsContents(listId: number, userId: number) {
       }
     }
   });
+  const resultFormated = result.map( item =>{
+    return {
+      id: item.id,
+      title: item.title,
+      iconList: item.iconList,
+      userId: item.userId,
+      listContents: item.listsMoviesTvshows.map( (item) =>{
+        return item['movieTvshow'];
+      }),
+      createdAt: item.createdAt
+    };
+  })
+
+  return resultFormated;
 }

@@ -19,3 +19,9 @@ export async function getLists(userId: number) {
   })
   return result
 }
+
+export async function getOneListAndItsContents(listId: number, userId: number) {
+  const promise = await listsRepo.getOneListAndItsContents(listId, userId);
+
+  return promise
+}

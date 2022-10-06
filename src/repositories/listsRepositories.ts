@@ -13,3 +13,14 @@ export async function getLists(userId: number) {
     }
   });
 }
+
+export async function getOneListAndItsContents(listId: number, userId: number) {
+  return await prisma.lists.findMany({
+    where: { userId: userId, id: listId },
+    include: {
+      listsMoviesTvshows: {
+        select: { movieTvshow: true }
+      }
+    }
+  });
+}

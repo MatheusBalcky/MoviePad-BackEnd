@@ -19,3 +19,12 @@ export async function getListsFromUser(req: Request, res: Response) {
 
   res.status(200).send(lists);
 }
+
+export async function getOneListAndContentsById(req: Request, res: Response) {
+  const { listId } = req.params;
+  const { userId } = res.locals.tokenData;
+
+  const list = await ListsServices.getOneListAndItsContents(Number(listId), userId);
+
+  res.status(200).send(list);
+}

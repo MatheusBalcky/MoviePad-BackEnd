@@ -14,10 +14,8 @@ listsRoutes.post(
 );
 // listsRoutes.post('/lists/:listId/new-content', tokenAuthenticationMiddle,)
 
-listsRoutes.get(
-  '/lists',
-  tokenAuthenticationMiddle,
-  listsController.getListsFromUser
-);
+listsRoutes.get('/lists', tokenAuthenticationMiddle, listsController.getListsFromUser);
+
+listsRoutes.get('/lists/:listId', tokenAuthenticationMiddle, listsController.getOneListAndContentsById);
 
 export default listsRoutes;

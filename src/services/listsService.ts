@@ -28,3 +28,14 @@ export async function getOneListAndItsContents(listId: number, userId: number) {
 
   return list;
 }
+
+export async function deleteListById(listId: number, userId: number) {
+  if (isNaN(listId)) throw { type: 'bad_request', message: 'Invalid list id' };
+
+  const list = await listsRepo.getList(listId);
+
+  if (!list) throw { type: 'not_found', message: 'List not found!' };
+  if (list.userId !== userId) throw { type: 'unauthorized', message: 'This list is not yours!' };
+
+  return await listsRepo.deleteListAndItsContents(listId);
+}

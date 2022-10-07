@@ -6,16 +6,15 @@ import * as listsController from '../controllers/listsController';
 
 const listsRoutes = Router();
 
-listsRoutes.post(
-  '/lists/create',
-  tokenAuthenticationMiddle,
-  validateSchemaMiddleware(listsSchemas.newList),
-  listsController.createList
-);
-// listsRoutes.post('/lists/:listId/new-content', tokenAuthenticationMiddle,)
+listsRoutes.use(tokenAuthenticationMiddle);
 
-listsRoutes.get('/lists', tokenAuthenticationMiddle, listsController.getListsFromUser);
+listsRoutes.post('/lists/create', validateSchemaMiddleware(listsSchemas.newList), listsController.createList);
+// listsRoutes.post('/lists/:listId/new-content')
 
-listsRoutes.get('/lists/:listId', tokenAuthenticationMiddle, listsController.getOneListAndContentsById);
+listsRoutes.get('/lists', listsController.getListsFromUser);
+
+listsRoutes.get('/lists/:listId', listsController.getOneListAndContentsById);
+
+listsRoutes.delete('/lists/:id/remove', listsController.deleteListById);
 
 export default listsRoutes;

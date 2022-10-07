@@ -5,6 +5,16 @@ export async function createList(listData: Is.ListData) {
   return await prisma.lists.create({ data: listData });
 }
 
+export async function getList(listId: number) {
+  return await prisma.lists.findUnique({ where: { id: listId}});
+}
+
+export async function deleteListAndItsContents(listId: number) {
+  const promise1 = await prisma.lists.delete({ where: { id: listId } });
+  const promise2 = await prisma.listsMoviesTvshows.deleteMany({ where: { listId } });
+  return [promise1, promise2]
+}
+
 export async function getLists(userId: number) {
   return await prisma.lists.findMany({
     where: { userId },
@@ -15,8 +25,7 @@ export async function getLists(userId: number) {
 }
 
 export async function getOneListAndItsContents(listId: number, userId: number) {
-  const result = await(
-    <any>prisma.$queryRaw`
+  const result = await (<any>prisma.$queryRaw`
   SELECT
     lists.id as "listId",
     lists."userId",
@@ -35,10 +44,9 @@ export async function getOneListAndItsContents(listId: number, userId: number) {
   LEFT JOIN "listsMoviesTvshows" ON "listsMoviesTvshows"."listId" = lists.id
   LEFT JOIN "moviesTvshows" ON "listsMoviesTvshows"."movieTvshowId" = "moviesTvshows".id
 
-  WHERE lists.id = ${listId} AND lists."userId" = ${userId}`
-  );
+  WHERE lists.id = ${listId} AND lists."userId" = ${userId}`);
 
-  if(result.length === 0) return false;
+  if (result.length === 0) return false;
 
   const resultFormated = {
     listId: result[0].listId,
@@ -56,7 +64,7 @@ export async function getOneListAndItsContents(listId: number, userId: number) {
     })
   };
 
-  if (result[0].contentTitle === null) resultFormated["contents"] = [];
+  if (result[0].contentTitle === null) resultFormated['contents'] = [];
 
   return resultFormated;
 }

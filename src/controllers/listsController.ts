@@ -28,3 +28,12 @@ export async function getOneListAndContentsById(req: Request, res: Response) {
 
   res.status(200).send(list);
 }
+
+export async function deleteListById(req: Request, res: Response) {
+  const { id: listId } = req.params;
+  const { userId } = res.locals.tokenData;
+
+  const deleteResult = await ListsServices.deleteListById(Number(listId), userId);
+
+  res.status(200).send(deleteResult);
+}

@@ -33,9 +33,8 @@ export async function getOneListAndItsContents(listId: number, userId: number) {
 export async function deleteListById(listId: number, userId: number) {
   if (isNaN(listId)) throw { type: 'bad_request', message: 'Invalid list id' };
 
-  const list = await listsRepo.getList(listId);
+  const list = await checkListExistence(listId)
 
-  if (!list) throw { type: 'not_found', message: 'List not found!' };
   if (list.userId !== userId) throw { type: 'unauthorized', message: 'This list is not yours!' };
 
   return await listsRepo.deleteListAndItsContents(listId);
@@ -43,6 +42,9 @@ export async function deleteListById(listId: number, userId: number) {
 
 export async function addNewContent(listId: number, contentData: any) {
   let contentIdToRelate = 0;
+
+  await checkListExistence(listId);
+
   const content = await contentsRepo.getOneContent(contentData.contentId);
 
   if (!content) {
@@ -52,4 +54,10 @@ export async function addNewContent(listId: number, contentData: any) {
     contentIdToRelate = content.id;
   }
   return await contentsRepo.createRelationListAndContent(listId, Number(contentIdToRelate));
+}
+
+async function checkListExistence(listId: number) {
+  const list = await listsRepo.getList(listId);
+  if (!list) throw { type: 'not_found', message: 'List not found!' };
+  return list
 }

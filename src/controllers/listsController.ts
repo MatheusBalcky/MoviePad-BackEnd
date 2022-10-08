@@ -29,10 +29,19 @@ export async function getOneListAndContentsById(req: Request, res: Response) {
 }
 
 export async function deleteListById(req: Request, res: Response) {
-  const { id: listId } = req.params;
+  const { listId } = req.params;
   const { userId } = res.locals.tokenData;
 
   const deleteResult = await ListsServices.deleteListById(Number(listId), userId);
 
   res.status(200).send(deleteResult);
+}
+
+export async function addNewContentIntoList(req: Request, res: Response){
+  const { listId } = req.params;
+  const contentData = req.body;
+
+  const result = await ListsServices.addNewContent(Number(listId), contentData);
+  
+  res.status(201).send(result);
 }

@@ -1,5 +1,6 @@
 import * as Interfs from '../interfaces/interfaces';
 import * as listsRepo from '../repositories/listsRepositories';
+import * as contentsRepo from '../repositories/contentsRepositories';
 
 export async function insertList(listData: Interfs.ListData) {
   return await listsRepo.createList(listData);
@@ -38,4 +39,17 @@ export async function deleteListById(listId: number, userId: number) {
   if (list.userId !== userId) throw { type: 'unauthorized', message: 'This list is not yours!' };
 
   return await listsRepo.deleteListAndItsContents(listId);
+}
+
+export async function addNewContent(listId: number, contentData: any) {
+  let contentIdToRelate = 0;
+  const content = await contentsRepo.getOneContent(contentData.contentId);
+
+  if (!content) {
+    const contentCreated = await contentsRepo.createContent(contentData);
+    contentIdToRelate = contentCreated.id;
+  } else {
+    contentIdToRelate = content.id;
+  }
+  return await contentsRepo.createRelationListAndContent(listId, Number(contentIdToRelate));
 }

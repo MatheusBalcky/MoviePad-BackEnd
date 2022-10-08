@@ -10,9 +10,9 @@ export async function getList(listId: number) {
 }
 
 export async function deleteListAndItsContents(listId: number) {
-  const promise1 = await prisma.lists.delete({ where: { id: listId } });
   const promise2 = await prisma.listsMoviesTvshows.deleteMany({ where: { listId } });
-  return [promise1, promise2]
+  const promise1 = await prisma.lists.delete({ where: { id: listId } });
+  return [promise1, promise2];
 }
 
 export async function getLists(userId: number) {

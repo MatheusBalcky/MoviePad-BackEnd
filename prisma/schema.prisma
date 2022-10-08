@@ -47,7 +47,7 @@ model moviesTvshows {
   title       String
   pictureUrl  String
   description String
-  releaseYear DateTime
+  releaseYear String
   trailerUrl  String?
   rating      Float
 

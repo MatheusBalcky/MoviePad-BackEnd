@@ -22,4 +22,6 @@ listsRoutes.get('/lists/:listId', listsController.getOneListAndContentsById);
 
 listsRoutes.delete('/lists/:listId/remove', listsController.deleteListById);
 
+listsRoutes.get('/contentFromAList/:id', listsController.getOneContentDataFromAList);
+
 export default listsRoutes;

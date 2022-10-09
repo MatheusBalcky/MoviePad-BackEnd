@@ -45,3 +45,11 @@ export async function addNewContentIntoList(req: Request, res: Response){
   
   res.status(201).send(result);
 }
+
+export async function getOneContentDataFromAList(req: Request, res: Response) {
+  const { id } = req.params;
+  
+  const content = await ListsServices.getOneContentDataFromAList(Number(id))
+
+  res.status(200).send(content);
+}

@@ -56,6 +56,16 @@ export async function addNewContent(listId: number, contentData: any) {
   return await contentsRepo.createRelationListAndContent(listId, Number(contentIdToRelate));
 }
 
+export async function getOneContentDataFromAList(contentId: number){
+  if (isNaN(contentId)) throw { type: 'not_found', message: 'No list founded' };
+  
+  const content = await contentsRepo.getOneContentById(contentId);
+  if(!content) throw { type: 'not_found', message: 'No list founded' };
+
+  return content
+}
+
+
 async function checkListExistence(listId: number) {
   const list = await listsRepo.getList(listId);
   if (!list) throw { type: 'not_found', message: 'List not found!' };

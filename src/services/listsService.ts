@@ -53,16 +53,31 @@ export async function addNewContent(listId: number, contentData: any) {
   } else {
     contentIdToRelate = content.id;
   }
-  return await contentsRepo.createRelationListAndContent(listId, Number(contentIdToRelate));
+  try {
+    await contentsRepo.createRelationListAndContent(listId, Number(contentIdToRelate));
+  } catch (error: any) {
+    if(error.code == 'P2002'){
+      throw { type: 'conflict', message: 'This content already exists on your list!'}
+    };
+  }
 }
 
-export async function getOneContentDataFromAList(contentId: number){
+export async function getOneContentDataFromAList(listId: number, contentId: number){
   if (isNaN(contentId)) throw { type: 'not_found', message: 'No list founded' };
   
-  const content = await contentsRepo.getOneContentById(contentId);
+  const content = await contentsRepo.getOneContentFromAListById(listId, contentId);
   if(!content) throw { type: 'not_found', message: 'No list founded' };
+  
+  return content.movieTvshow
+}
 
-  return content
+export async function deleteOneContentDataFromAList(listId: number, contentId: number, userId: number) {
+  if (isNaN(contentId)) throw { type: 'not_found', message: 'No list founded' };
+
+  const list = await checkListExistence(listId);
+  if(list.userId !== userId) throw { type: 'unauthorized', message: 'This list is not yours!' };
+
+  return await contentsRepo.deleteOneContentFromAList(listId, contentId);
 }
 
 

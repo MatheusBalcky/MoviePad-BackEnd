@@ -4,10 +4,13 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
+    "build": "tsc",
     "dev": "nodemon src/server.ts",
-    "test:int": "dotenv -e .env.test jest auth.test.ts",
     "lint": "eslint . --ext .ts",
-    "test": "dotenv -e .env.test jest"
+    "test": "dotenv -e .env.test jest",
+    "prisma:deploy": "prisma migrate deploy",
+    "start": "npm run prisma:deploy && node dist/src/server.js",
+    "testBuild": "node dist/src/server.js"
   },
   "keywords": [],
   "author": "baalcky",

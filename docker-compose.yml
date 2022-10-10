@@ -1,0 +1,24 @@
+services:
+  postgres_moviepad:
+    image: postgres
+    container_name: postgres_moviepad
+    restart: always
+    ports:
+      - 2345:5432
+    env_file:
+      - .env
+    volumes: 
+      - pg_moviepad-db:/var/lib/postgresql/data
+
+  node_moviepad_app:
+    container_name: node_moviepad_app
+    build: .
+    ports:
+      - 5000:5000
+    depends_on:
+      - postgres_moviepad
+    env_file:
+      - .env
+
+volumes:
+  pg_moviepad-db:

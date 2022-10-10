@@ -9,7 +9,7 @@
     "lint": "eslint . --ext .ts",
     "test": "dotenv -e .env.test jest",
     "prisma:deploy": "prisma migrate deploy",
-    "start": "node dist/src/server.js",
+    "start": "npm run prisma:deploy && node dist/src/server.js",
     "testBuild": "node dist/src/server.js"
   },
   "keywords": [],

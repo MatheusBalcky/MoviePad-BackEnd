@@ -39,6 +39,7 @@ model listsMoviesTvshows {
 
   movieTvshowId Int
   movieTvshow   moviesTvshows @relation(fields: [movieTvshowId], references: [id])
+  @@unique([listId, movieTvshowId])
 }
 
 model moviesTvshows {

@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-dotenv.config();
+dotenv.config({ quiet: true });
 import { NextFunction, Request, Response } from 'express';
 import * as jwt from '../utils/jwtUtils';
 

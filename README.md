@@ -76,7 +76,9 @@ POST /lists/:listId/addcontent (autenticada)
 
 ## 🏁 Rodando a aplicação
 
-Use Node.js 24 LTS, npm e PostgreSQL. As dependências foram atualizadas em 7 de outubro de 2026. O TypeScript permanece em 6.0.3 por compatibilidade com ts-jest e typescript-eslint; versões de pré-lançamento não foram adotadas.
+Use Node.js 24 LTS (24.15.0 ou superior), npm 12.2.0 e PostgreSQL. As dependências foram atualizadas em 7 de outubro de 2026. O TypeScript permanece em 6.0.3 por compatibilidade com typescript-eslint; versões de pré-lançamento não foram adotadas. O Jest usa Babel 7.29.7, compatível com seus presets atuais.
+
+O `package.json` registra permissões de instalação para versões específicas das dependências que geram clientes ou carregam componentes nativos. Os `overrides` atualizam dependências transitivas vulneráveis do Prisma e da cobertura de testes, além do `glob` obsoleto. Ao atualizar essas versões, revise as permissões e valide novamente instalação, migrações, testes e cobertura.
 
 Primeiro, faça o clone desse repositório na sua maquina:
 
@@ -117,4 +119,4 @@ npm run lint
 npm test -- --runInBand
 ```
 
-Antes dos testes, crie `.env.test` com `DATABASE_URL` apontando para um banco PostgreSQL separado e aplique as mesmas migrações a esse banco. O teste executa `TRUNCATE users CASCADE`; nunca use o banco de desenvolvimento ou produção. O Jest usa módulos VM para importar o Faker atual, que é ESM.
+Antes dos testes, crie `.env.test` com `DATABASE_URL` apontando para um banco PostgreSQL separado e aplique as mesmas migrações a esse banco. O teste executa `TRUNCATE users CASCADE`; nunca use o banco de desenvolvimento ou produção. O Jest transforma TypeScript e o Faker ESM com Babel, sem módulos VM experimentais. Para gerar cobertura, execute `npm test -- --runInBand --coverage`. Para verificar vulnerabilidades, execute `npm audit`.

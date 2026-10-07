@@ -15,7 +15,7 @@ const request = supertest(index);
 
 describe('ROUTES OF AUTHENTICATIONS', () => {
   test('Test /signup with validate data', async () => {
-    const signUpData = await authFactories.generateSignUpData();
+    const signUpData = authFactories.generateSignUpData();
     
     const promise = await request.post('/signup').send(signUpData);
 

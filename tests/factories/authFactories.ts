@@ -1,6 +1,5 @@
-import { faker } from '@faker-js/faker';
-
-export function generateSignUpData() {
+export async function generateSignUpData() {
+  const { faker } = await import('@faker-js/faker');
   const password = faker.internet.password();
   return {
     email: faker.internet.email(),

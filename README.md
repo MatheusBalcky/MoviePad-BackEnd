@@ -76,7 +76,7 @@ POST /lists/:listId/addcontent (autenticada)
 
 ## 🏁 Rodando a aplicação
 
-Este projeto foi inicializado com o Node.Js e com o gerenciador de bibliotecas NPM, então certifique-se que voce tem a ultima versão estável do [Node.js](https://nodejs.org/en/download/) e [npm](https://www.npmjs.com/) rodando localmente.
+Use Node.js 24 LTS, npm e PostgreSQL. As dependências foram atualizadas em 7 de outubro de 2026. O TypeScript permanece em 6.0.3 por compatibilidade com ts-jest e typescript-eslint; versões de pré-lançamento não foram adotadas.
 
 Primeiro, faça o clone desse repositório na sua maquina:
 
@@ -87,16 +87,34 @@ git clone https://github.com/MatheusBalcky/MoviePad-BackEnd.git
 Depois, dentro da pasta, rode o seguinte comando para instalar as dependencias.
 
 ```
-npm install
+npm ci
 ```
 
-Logo após faça as migrates do prisma para criar o banco da aplicação local (postgres).
+Copie `.env.example` para `.env` e configure `PORT`, `JWT_SECRET` e `DATABASE_URL`. Use um segredo JWT privado e uma URL PostgreSQL válida. O cliente Prisma é gerado automaticamente na instalação; para regenerá-lo, use `npm run prisma:generate`.
+
+Aplique as migrações existentes ao banco configurado:
 
 ```
-npx migrate dev
+npm run prisma:deploy
 ```
 
 Finalizado o processo, é só inicializar o servidor
 ```
 npm run dev
 ```
+
+Para compilar e executar a versão compilada:
+
+```sh
+npm run build
+npm start
+```
+
+Para verificar o código e executar o teste de integração:
+
+```sh
+npm run lint
+npm test -- --runInBand
+```
+
+Antes dos testes, crie `.env.test` com `DATABASE_URL` apontando para um banco PostgreSQL separado e aplique as mesmas migrações a esse banco. O teste executa `TRUNCATE users CASCADE`; nunca use o banco de desenvolvimento ou produção. O Jest usa módulos VM para importar o Faker atual, que é ESM.

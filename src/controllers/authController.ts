@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import * as authService from '../services/authServices';
 import * as interfaces from '../interfaces/interfaces';
 import * as jwt from '../utils/jwtUtils';
-import prisma from '../database/database';
+import { findUserById } from '../repositories/authRepositories';
 
 export async function signUp(req: Request, res: Response) {
   const { email, password } = req.body;
@@ -23,7 +23,7 @@ export async function signIn(req: Request, res: Response) {
 
 export async function tokenVerify(req: Request, res: Response) {
   const { userId } = res.locals.tokenData;
-  const userData = await prisma.users.findUnique({ where: { id: userId } });
+  const userData = await findUserById(userId);
   const token = jwt.createToken({ userId: userId });
   const user = {
     id: userData?.id,

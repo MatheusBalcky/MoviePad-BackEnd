@@ -1,55 +1,50 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-generator client {
-  provider = "prisma-client-js"
-}
-
-datasource db {
-  provider = "postgresql"
-}
-
+// use prisma-8
+// PostgreSQL contract for Prisma ORM 8. Preserve existing table and constraint names.
 model users {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
+  id        Int                @id @default(autoincrement())
+  createdAt TimestampString(3) @default(now())
+  email     String
   password  String
-  createdAt DateTime @default(now())
+  lists     lists[]
 
-  lists lists[]
+  @@index([email], map: "users_email_key", unique: true)
+  @@map("users")
 }
 
 model lists {
-  id       Int     @id @default(autoincrement())
-  title    String
-  iconList String?
-  userId   Int
-  author   users   @relation(fields: [userId], references: [id])
-
-  createdAt DateTime @default(now())
-
+  id                 Int                  @id @default(autoincrement())
+  createdAt          TimestampString(3)   @default(now())
+  iconList           String?
+  title              String
+  userId             Int
   listsMoviesTvshows listsMoviesTvshows[]
-}
+  author             users                @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Cascade, index: false)
 
-model listsMoviesTvshows {
-  id Int @id @default(autoincrement())
-
-  listId Int
-  list   lists @relation(fields: [listId], references: [id])
-
-  movieTvshowId Int
-  movieTvshow   moviesTvshows @relation(fields: [movieTvshowId], references: [id])
-  @@unique([listId, movieTvshowId])
+  @@map("lists")
 }
 
 model moviesTvshows {
-  id          Int      @id @default(autoincrement())
-  contentId   Int      @unique
-  title       String
-  pictureUrl  String
-  description String
-  releaseYear String
-  trailerUrl  String?
-  rating      Float
-
+  id                 Int                  @id @default(autoincrement())
+  contentId          Int
+  description        String
+  pictureUrl         String
+  rating             Float
+  releaseYear        String
+  title              String
+  trailerUrl         String?
   listsMoviesTvshows listsMoviesTvshows[]
+
+  @@index([contentId], map: "moviesTvshows_contentId_key", unique: true)
+  @@map("moviesTvshows")
+}
+
+model listsMoviesTvshows {
+  id            Int           @id @default(autoincrement())
+  listId        Int
+  movieTvshowId Int
+  list          lists         @relation(fields: [listId], references: [id], onDelete: Restrict, onUpdate: Cascade, index: false)
+  movieTvshow   moviesTvshows @relation(fields: [movieTvshowId], references: [id], onDelete: Restrict, onUpdate: Cascade, index: false)
+
+  @@index([listId, movieTvshowId], map: "listsMoviesTvshows_listId_movieTvshowId_key", unique: true)
+  @@map("listsMoviesTvshows")
 }

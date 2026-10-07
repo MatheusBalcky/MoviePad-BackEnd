@@ -4,7 +4,10 @@ import plugin from '@typescript-eslint/eslint-plugin';
 import prettier from 'eslint-config-prettier';
 
 export default [
-  { ignores: ['dist/**', 'coverage/**', 'node_modules/**'] },
+  { ignores: [
+    'dist/**', 'coverage/**', 'node_modules/**', '.agents/**', '.prisma/**',
+    'src/database/generated/**', 'prisma/migrations-v8/snapshots/**'
+  ] },
   {
     files: ['**/*.ts'],
     languageOptions: {

@@ -56,7 +56,7 @@ export async function addNewContent(listId: number, contentData: any) {
   try {
     await contentsRepo.createRelationListAndContent(listId, Number(contentIdToRelate));
   } catch (error: any) {
-    if(error.code == 'P2002'){
+    if(error.sqlState === '23505'){
       throw { type: 'conflict', message: 'This content already exists on your list!'}
     };
   }

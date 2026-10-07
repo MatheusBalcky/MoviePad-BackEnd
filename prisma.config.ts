@@ -1,10 +1,15 @@
 import dotenv from 'dotenv';
-import { defineConfig } from 'prisma/config';
+import { definePrismaConfig } from 'prisma/config';
+import { defineConfig } from '@prisma/orm-postgres/config';
 
 dotenv.config({ quiet: true });
 
-export default defineConfig({
-  schema: 'prisma/schema.prisma',
-  migrations: { path: 'prisma/migrations' },
-  datasource: { url: process.env.DATABASE_URL ?? '' }
+export default definePrismaConfig({
+  skills: { agents: ['agents'] },
+  orm: defineConfig({
+    contract: 'prisma/schema.prisma',
+    output: 'src/database/generated',
+    migrations: { dir: 'prisma/migrations-v8' },
+    db: { connection: process.env.DATABASE_URL ?? '' }
+  })
 });

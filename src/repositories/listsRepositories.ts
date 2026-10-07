@@ -1,31 +1,34 @@
-import prisma from '../database/database';
+import db, { pool, withCreatedAt } from '../database/database';
 import * as Is from '../interfaces/interfaces';
 
 export async function createList(listData: Is.ListData) {
-  return await prisma.lists.create({ data: listData });
+  return withCreatedAt(await db.orm.public.lists.create(listData));
 }
 
 export async function getList(listId: number) {
-  return await prisma.lists.findUnique({ where: { id: listId}});
+  const list = await db.orm.public.lists.where({ id: listId }).first();
+  return list ? withCreatedAt(list) : null;
 }
 
 export async function deleteListAndItsContents(listId: number) {
-  const promise2 = await prisma.listsMoviesTvshows.deleteMany({ where: { listId } });
-  const promise1 = await prisma.lists.delete({ where: { id: listId } });
-  return [promise1, promise2];
+  const count = await db.orm.public.listsMoviesTvshows.where({ listId }).deleteAndCount();
+  const list = await db.orm.public.lists.where({ id: listId }).delete();
+  return [list ? withCreatedAt(list) : null, { count }];
 }
 
 export async function getLists(userId: number) {
-  return await prisma.lists.findMany({
-    where: { userId },
-    include: {
-      _count: true
-    }
-  });
+  const lists = await db.orm.public.lists
+    .where({ userId })
+    .include('listsMoviesTvshows', (contents) => contents.count())
+    .all();
+  return lists.map(({ listsMoviesTvshows, ...list }) => ({
+    ...withCreatedAt(list),
+    _count: { listsMoviesTvshows }
+  }));
 }
 
 export async function getOneListAndItsContents(listId: number, userId: number) {
-  const result = await (<any>prisma.$queryRaw`
+  const { rows: result } = await pool.query(`
   SELECT
     lists.id as "listId",
     lists."userId",
@@ -44,7 +47,7 @@ export async function getOneListAndItsContents(listId: number, userId: number) {
   LEFT JOIN "listsMoviesTvshows" ON "listsMoviesTvshows"."listId" = lists.id
   LEFT JOIN "moviesTvshows" ON "listsMoviesTvshows"."movieTvshowId" = "moviesTvshows".id
 
-  WHERE lists.id = ${listId} AND lists."userId" = ${userId}`);
+  WHERE lists.id = $1 AND lists."userId" = $2`, [listId, userId]);
 
   if (result.length === 0) return false;
 

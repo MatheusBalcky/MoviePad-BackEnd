@@ -1,9 +1,9 @@
-import { users } from '@prisma/client';
+import type { StorageColumnTypes } from '../database/generated/contract';
 
-export type userData = Omit<users, 'id' | 'createdAt'>;
+export type userData = Pick<StorageColumnTypes['public']['users'], 'email' | 'password'>;
 
 export interface ListData {
   userId: number;
   title: string;
-  icon: string;
+  iconList?: string;
 }

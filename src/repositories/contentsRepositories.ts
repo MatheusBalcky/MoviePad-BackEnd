@@ -1,33 +1,27 @@
-import prisma from "../database/database";
+import db from '../database/database';
 
 export async function getOneContent(contentIdTMDB: number) {
-  return prisma.moviesTvshows.findUnique({ where: { contentId: contentIdTMDB } });
+  return db.orm.public.moviesTvshows.where({ contentId: contentIdTMDB }).first();
 }
 
 export async function getOneContentFromAListById(listId: number, contentId: number) {
-  const result: any = await prisma.listsMoviesTvshows.findMany({
-    where: {
-      AND: [{ movieTvshowId: contentId }, { listId: listId }] 
-    },
-    include: {
-      movieTvshow: true
-    }
-  });
-  return result[0]
+  return db.orm.public.listsMoviesTvshows
+    .where({ movieTvshowId: contentId, listId })
+    .include('movieTvshow')
+    .first();
 }
 
 export async function createContent(contentData: any) {
-  return prisma.moviesTvshows.create({ data: contentData});
+  return db.orm.public.moviesTvshows.create(contentData);
 }
 
 export async function createRelationListAndContent(listId: number, contentId: number) {
-  return prisma.listsMoviesTvshows.create({ data: { listId, movieTvshowId: contentId} });
+  return db.orm.public.listsMoviesTvshows.create({ listId, movieTvshowId: contentId });
 }
 
 export async function deleteOneContentFromAList(listId: number, contentId: number) {
-  return await prisma.listsMoviesTvshows.deleteMany({
-    where: {
-      AND: [{ movieTvshowId: contentId }, { listId: listId }]
-    }
-  });
+  const count = await db.orm.public.listsMoviesTvshows
+    .where({ movieTvshowId: contentId, listId })
+    .deleteAndCount();
+  return { count };
 }

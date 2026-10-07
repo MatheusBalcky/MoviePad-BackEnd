@@ -7,7 +7,7 @@ module.exports = {
       plugins: ['@babel/plugin-transform-modules-commonjs']
     }]
   },
-  transformIgnorePatterns: ['/node_modules/(?!@faker-js/faker/)'],
+  transformIgnorePatterns: ['/node_modules/(?!(@faker-js/faker/|@prisma/orm-[^/]+/|@ark/|@noble/|arktype/|arkregex/|uniku/|temporal-(polyfill|spec|utils)/))'],
   testEnvironment: 'node',
   roots: ['<rootDir>/tests'],
   testMatch: ['**/*.test.ts']

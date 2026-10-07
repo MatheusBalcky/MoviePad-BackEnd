@@ -1,9 +1,19 @@
 import dotenv from 'dotenv';
-import { PrismaClient } from '@prisma/client';
-import { PrismaPg } from '@prisma/adapter-pg';
+import postgres from '@prisma/orm-postgres/runtime';
+import { Pool } from 'pg';
+import type { Contract } from './generated/contract';
+import contractJson from './generated/contract.json';
 
 dotenv.config({ quiet: true });
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-const prisma = new PrismaClient({ adapter });
+export const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const db = postgres<Contract>({ contractJson, pg: pool });
 
-export default prisma;
+// Keep the API's UTC Date serialization when the ORM returns timestamp strings.
+export function withCreatedAt<T extends { createdAt: string }>(row: T) {
+  const timestamp = /(?:Z|[+-]\d{2}:\d{2})$/i.test(row.createdAt)
+    ? row.createdAt
+    : `${row.createdAt}Z`;
+  return { ...row, createdAt: new Date(timestamp) };
+}
+
+export default db;

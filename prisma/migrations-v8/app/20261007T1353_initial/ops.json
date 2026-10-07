@@ -1,0 +1,418 @@
+[
+  {
+    "id": "schema.public",
+    "label": "Create schema \"public\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres"
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "Create schema \"public\"",
+        "sql": "CREATE SCHEMA IF NOT EXISTS \"public\"",
+        "params": []
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "table.lists",
+    "label": "Create table \"lists\"",
+    "summary": "Creates table \"lists\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "lists"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"lists\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"lists\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"lists\"",
+        "sql": "CREATE TABLE \"public\".\"lists\" (\n  \"createdAt\" timestamp(3) DEFAULT (now()) NOT NULL,\n  \"iconList\" text,\n  \"id\" SERIAL NOT NULL,\n  \"title\" text NOT NULL,\n  \"userId\" int4 NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"lists\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"lists\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.listsMoviesTvshows",
+    "label": "Create table \"listsMoviesTvshows\"",
+    "summary": "Creates table \"listsMoviesTvshows\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "listsMoviesTvshows"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"listsMoviesTvshows\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"listsMoviesTvshows\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"listsMoviesTvshows\"",
+        "sql": "CREATE TABLE \"public\".\"listsMoviesTvshows\" (\n  \"id\" SERIAL NOT NULL,\n  \"listId\" int4 NOT NULL,\n  \"movieTvshowId\" int4 NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"listsMoviesTvshows\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"listsMoviesTvshows\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.moviesTvshows",
+    "label": "Create table \"moviesTvshows\"",
+    "summary": "Creates table \"moviesTvshows\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "moviesTvshows"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"moviesTvshows\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"moviesTvshows\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"moviesTvshows\"",
+        "sql": "CREATE TABLE \"public\".\"moviesTvshows\" (\n  \"contentId\" int4 NOT NULL,\n  \"description\" text NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"pictureUrl\" text NOT NULL,\n  \"rating\" float8 NOT NULL,\n  \"releaseYear\" text NOT NULL,\n  \"title\" text NOT NULL,\n  \"trailerUrl\" text,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"moviesTvshows\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"moviesTvshows\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.users",
+    "label": "Create table \"users\"",
+    "summary": "Creates table \"users\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "users"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"users\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"users\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"users\"",
+        "sql": "CREATE TABLE \"public\".\"users\" (\n  \"createdAt\" timestamp(3) DEFAULT (now()) NOT NULL,\n  \"email\" text NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"password\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"users\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"users\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.listsMoviesTvshows.listsMoviesTvshows_listId_movieTvshowId_key",
+    "label": "Create index \"listsMoviesTvshows_listId_movieTvshowId_key\" on \"listsMoviesTvshows\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "listsMoviesTvshows_listId_movieTvshowId_key",
+        "table": "listsMoviesTvshows"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"listsMoviesTvshows_listId_movieTvshowId_key\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"listsMoviesTvshows_listId_movieTvshowId_key\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"listsMoviesTvshows_listId_movieTvshowId_key\"",
+        "sql": "CREATE UNIQUE INDEX \"listsMoviesTvshows_listId_movieTvshowId_key\" ON \"public\".\"listsMoviesTvshows\" (\"listId\", \"movieTvshowId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"listsMoviesTvshows_listId_movieTvshowId_key\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"listsMoviesTvshows_listId_movieTvshowId_key\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.moviesTvshows.moviesTvshows_contentId_key",
+    "label": "Create index \"moviesTvshows_contentId_key\" on \"moviesTvshows\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "moviesTvshows_contentId_key",
+        "table": "moviesTvshows"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"moviesTvshows_contentId_key\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"moviesTvshows_contentId_key\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"moviesTvshows_contentId_key\"",
+        "sql": "CREATE UNIQUE INDEX \"moviesTvshows_contentId_key\" ON \"public\".\"moviesTvshows\" (\"contentId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"moviesTvshows_contentId_key\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"moviesTvshows_contentId_key\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.users.users_email_key",
+    "label": "Create index \"users_email_key\" on \"users\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "users_email_key",
+        "table": "users"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"users_email_key\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"users_email_key\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"users_email_key\"",
+        "sql": "CREATE UNIQUE INDEX \"users_email_key\" ON \"public\".\"users\" (\"email\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"users_email_key\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"users_email_key\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.lists.lists_userId_fkey",
+    "label": "Add foreign key \"lists_userId_fkey\" on \"lists\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "lists_userId_fkey",
+        "table": "lists"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"lists_userId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "lists_userId_fkey",
+          "public",
+          "\"public\".\"lists\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"lists_userId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"lists\"\nADD CONSTRAINT \"lists_userId_fkey\"\nFOREIGN KEY (\"userId\")\nREFERENCES \"public\".\"users\" (\"id\")\nON DELETE RESTRICT\nON UPDATE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"lists_userId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "lists_userId_fkey",
+          "public",
+          "\"public\".\"lists\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.listsMoviesTvshows.listsMoviesTvshows_listId_fkey",
+    "label": "Add foreign key \"listsMoviesTvshows_listId_fkey\" on \"listsMoviesTvshows\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "listsMoviesTvshows_listId_fkey",
+        "table": "listsMoviesTvshows"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"listsMoviesTvshows_listId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "listsMoviesTvshows_listId_fkey",
+          "public",
+          "\"public\".\"listsMoviesTvshows\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"listsMoviesTvshows_listId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"listsMoviesTvshows\"\nADD CONSTRAINT \"listsMoviesTvshows_listId_fkey\"\nFOREIGN KEY (\"listId\")\nREFERENCES \"public\".\"lists\" (\"id\")\nON DELETE RESTRICT\nON UPDATE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"listsMoviesTvshows_listId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "listsMoviesTvshows_listId_fkey",
+          "public",
+          "\"public\".\"listsMoviesTvshows\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.listsMoviesTvshows.listsMoviesTvshows_movieTvshowId_fkey",
+    "label": "Add foreign key \"listsMoviesTvshows_movieTvshowId_fkey\" on \"listsMoviesTvshows\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "listsMoviesTvshows_movieTvshowId_fkey",
+        "table": "listsMoviesTvshows"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"listsMoviesTvshows_movieTvshowId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "listsMoviesTvshows_movieTvshowId_fkey",
+          "public",
+          "\"public\".\"listsMoviesTvshows\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"listsMoviesTvshows_movieTvshowId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"listsMoviesTvshows\"\nADD CONSTRAINT \"listsMoviesTvshows_movieTvshowId_fkey\"\nFOREIGN KEY (\"movieTvshowId\")\nREFERENCES \"public\".\"moviesTvshows\" (\"id\")\nON DELETE RESTRICT\nON UPDATE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"listsMoviesTvshows_movieTvshowId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "listsMoviesTvshows_movieTvshowId_fkey",
+          "public",
+          "\"public\".\"listsMoviesTvshows\""
+        ]
+      }
+    ]
+  }
+]
